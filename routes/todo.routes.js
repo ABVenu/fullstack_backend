@@ -93,7 +93,8 @@ TodoRouter.get(
       //     .status(200)
       //     .json({ message: "Todos List From Redis-Caching", todos });
       // }
-      let todos = JSON.parse(cachedData);
+      // let todos = JSON.parse(cachedData);
+      let todos = await TodoModel.find({ userId: req.user });
         res
           .status(200)
           .json({ message: "Todos List From Redis-Caching", todos });
