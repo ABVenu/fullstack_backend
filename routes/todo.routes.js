@@ -1,7 +1,7 @@
 const express = require("express");
 const TodoModel = require("../models/todo.model");
 const authMiddleware = require("../middlewares/auth.middleware");
-const redis = require("../configs/redis.config");
+//const redis = require("../configs/redis.config");
 const cron = require("node-cron");
 const TodoRouter = express.Router();
 const PDFDocument = require("pdfkit");
@@ -18,7 +18,7 @@ TodoRouter.post(
       let todo = await TodoModel.create({ ...req.body, userId: req.user });
       /// Delete the existing Todos is Redis,
       // so that new Todo should be included get todo resposne
-      redis.del(userId);
+      //redis.del(userId);
       res.status(200).json({ message: "Todo Added", todo });
     } catch (err) {
       res.status(500).json({ message: "Something went wrong" });
@@ -36,7 +36,7 @@ TodoRouter.delete(
       await TodoModel.findByIdAndDelete(id);
        /// Delete the existing Todos is Redis,
       // so that new Todo should be included get todo resposne
-      redis.del(userId);
+      //redis.del(userId);
       res.status(200).json({ message: "Todo Deleted" });
     } catch (err) {
       console.log(err)
@@ -55,7 +55,7 @@ TodoRouter.patch(
       await TodoModel.findByIdAndUpdate(id, req.body);
        /// Delete the existing Todos is Redis,
       // so that new Todo should be included get todo resposne
-      redis.del(userId);
+      //redis.del(userId);
       res.status(200).json({ message: "Todo Updated" });
     } catch (err) {
       console.log(err)
@@ -76,7 +76,7 @@ TodoRouter.get(
       // Uses Key Value,
       // Key should be used? allTodos??
       let userId = req.user;
-      let cachedData = await redis.get(userId);
+      //let cachedData = await redis.get(userId);
       //console.log("cachedData", cachedData)
 
       if (!cachedData) {
@@ -84,7 +84,7 @@ TodoRouter.get(
         // get Data from DB and store in Redis and give the response
         let todos = await TodoModel.find({ userId: req.user });
         // storing in redis, stringify the data before storing
-        redis.set(userId, JSON.stringify(todos), "EX", 300);
+        //redis.set(userId, JSON.stringify(todos), "EX", 300);
         res.status(200).json({ message: "Todos List From DB", todos });
       } else {
         // Data is present in the Redis, send this as respsonse
