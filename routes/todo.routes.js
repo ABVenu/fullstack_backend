@@ -79,20 +79,24 @@ TodoRouter.get(
       //let cachedData = await redis.get(userId);
       //console.log("cachedData", cachedData)
 
-      if (!cachedData) {
-        /// data is not stored in Redis
-        // get Data from DB and store in Redis and give the response
-        let todos = await TodoModel.find({ userId: req.user });
-        // storing in redis, stringify the data before storing
-        //redis.set(userId, JSON.stringify(todos), "EX", 300);
-        res.status(200).json({ message: "Todos List From DB", todos });
-      } else {
-        // Data is present in the Redis, send this as respsonse
-        let todos = JSON.parse(cachedData);
+      // if (!cachedData) {
+      //   /// data is not stored in Redis
+      //   // get Data from DB and store in Redis and give the response
+      //   let todos = await TodoModel.find({ userId: req.user });
+      //   // storing in redis, stringify the data before storing
+      //   //redis.set(userId, JSON.stringify(todos), "EX", 300);
+      //   res.status(200).json({ message: "Todos List From DB", todos });
+      // } else {
+      //   // Data is present in the Redis, send this as respsonse
+      //   let todos = JSON.parse(cachedData);
+      //   res
+      //     .status(200)
+      //     .json({ message: "Todos List From Redis-Caching", todos });
+      // }
+      let todos = JSON.parse(cachedData);
         res
           .status(200)
           .json({ message: "Todos List From Redis-Caching", todos });
-      }
     } catch (err) {
       res.status(500).json({ message: "Something went wrong" });
     }
